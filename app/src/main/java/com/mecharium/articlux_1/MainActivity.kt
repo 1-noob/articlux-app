@@ -6,7 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,22 +22,27 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Articlux_1Theme {
-                HelloAndroid()
+                Scaffold(modifier = Modifier.fillMaxSize()) {innerPadding ->
+                    StartScanButton(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun HelloAndroid() {
+fun StartScanButton(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "Hello Android",
-            style = MaterialTheme.typography.headlineMedium
-        )
+        Button(onClick = {}){
+            Text(text = "SCAN")
+        }
     }
 }
 
@@ -43,7 +50,7 @@ fun HelloAndroid() {
 @Composable
 fun PreviewHelloAndroid() {
     Articlux_1Theme {
-        HelloAndroid()
+        StartScanButton(modifier = Modifier.fillMaxSize())
     }
 }
 

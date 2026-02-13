@@ -5,6 +5,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.Font
+import com.mecharium.articlux_1.R
+
+
+val Burbank = FontFamily(
+    Font(R.font.burbank_big_condensed, FontWeight.W600)
+)
+
 
 // Set of Material typography styles to start with
 val Typography = Typography(

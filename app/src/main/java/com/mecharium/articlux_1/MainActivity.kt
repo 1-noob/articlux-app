@@ -5,14 +5,22 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import com.mecharium.articlux_1.ui.theme.Articlux_1Theme
 
@@ -40,15 +48,36 @@ fun StartScanButton(modifier: Modifier = Modifier) {
         modifier = modifier,
         contentAlignment = Alignment.Center
     ) {
-        Button(onClick = {}){
-            Text(text = "SCAN")
+        Box(
+            modifier = Modifier
+                .width(250.dp)
+                .height(68.dp)
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = listOf(
+                            Color(0xFFFEFC41),
+                            Color(0xFFFFFFC6)
+                        )
+                    )
+                )
+                .clickable {
+                    // connect to backend!
+                },
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "SCAN",
+                color = Color.Black,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewHelloAndroid() {
+fun PreviewStartScanButton() {
     Articlux_1Theme {
         StartScanButton(modifier = Modifier.fillMaxSize())
     }

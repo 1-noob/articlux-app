@@ -21,8 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.mecharium.articlux_1.ui.theme.Articlux_1Theme
+import com.mecharium.articlux_1.ui.theme.Burbank
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,8 +73,10 @@ fun StartScanButton(modifier: Modifier = Modifier) {
             Text(
                 text = "SCAN",
                 color = Color.Black,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
+                fontFamily = Burbank,
+                fontWeight = FontWeight.W600,
+                fontSize = 38.sp,
+                textAlign = TextAlign.Center
             )
         }
     }

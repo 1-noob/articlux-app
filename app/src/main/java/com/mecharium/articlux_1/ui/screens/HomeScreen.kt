@@ -16,6 +16,7 @@ fun HomeScreen(){
 
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
+
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -38,7 +39,8 @@ fun HomeScreen(){
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp)
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text("Button Pressed!")
 
@@ -47,7 +49,9 @@ fun HomeScreen(){
                 PrimaryButton(
                     // Change to Proceed (Synchronising articles into DB)
                     text = "Close",
-                    onClick = { showBottomSheet = false }
+                    onClick = { showBottomSheet = false },
+                    modifier = Modifier
+                        .width(180.dp)
                 )
 
             }

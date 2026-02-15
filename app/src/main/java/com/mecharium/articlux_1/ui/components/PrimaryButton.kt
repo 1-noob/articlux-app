@@ -36,8 +36,8 @@ fun PrimaryButton(
 
     Box(
         modifier = modifier
-            .width(250.dp)
-            .height(68.dp)
+            .width(200.dp)
+            .height(55.dp)
             .clip(slantedShape)
             .background(
                 brush = Brush.horizontalGradient(

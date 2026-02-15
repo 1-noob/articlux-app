@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.mecharium.articlux_1.ui.components.PrimaryButton
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -15,6 +16,7 @@ import com.mecharium.articlux_1.ui.components.PrimaryButton
 fun HomeScreen(){
 
     val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
     var showBottomSheet by remember { mutableStateOf(false) }
 
     Box(
@@ -33,7 +35,15 @@ fun HomeScreen(){
 
     if (showBottomSheet) {
         ModalBottomSheet(
-            onDismissRequest = { showBottomSheet = false },
+            onDismissRequest = {
+                scope.launch {
+                    sheetState.hide()
+                }.invokeOnCompletion {
+                    if (!sheetState.isVisible) {
+                        showBottomSheet = false
+                    }
+                }
+            },
             sheetState = sheetState
         ) {
             Column(
@@ -44,12 +54,20 @@ fun HomeScreen(){
             ) {
                 Text("Button Pressed!")
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(40.dp))
 
                 PrimaryButton(
                     // Change to Proceed (Synchronising articles into DB)
                     text = "Close",
-                    onClick = { showBottomSheet = false },
+                    onClick = {
+                        scope.launch {
+                            sheetState.hide()
+                        }.invokeOnCompletion {
+                            if (!sheetState.isVisible){
+                                showBottomSheet = false
+                            }
+                        }
+                    },
                     modifier = Modifier
                         .width(180.dp)
                 )

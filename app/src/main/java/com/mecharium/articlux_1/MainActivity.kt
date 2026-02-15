@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import com.mecharium.articlux_1.ui.screens.HomeScreen
 import com.mecharium.articlux_1.ui.theme.Articlux_1Theme
 import com.mecharium.articlux_1.ui.theme.Burbank
 import kotlinx.coroutines.launch
@@ -45,13 +46,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Articlux_1Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) {innerPadding ->
-                    StartScanButton(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding)
-                    )
-                }
+                HomeScreen()
             }
         }
     }

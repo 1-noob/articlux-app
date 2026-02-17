@@ -9,7 +9,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import com.mecharium.articlux_1.ui.components.PrimaryButton
 import kotlinx.coroutines.launch
-
+import android.util.Log
+import com.mecharium.articlux_1.data.remote.RetrofitInstance
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,7 +27,20 @@ fun HomeScreen(){
         PrimaryButton(
             text = "SCAN",
             onClick = {
-                // Scan the feed for new articles
+                // Test API Connection
+                scope.launch {
+                    try {
+                        val response = RetrofitInstance.api.ping()
+
+                        if (response.isSuccessful) {
+                            Log.d("PING", response.body()?.message ?: "Empty")
+                        } else {
+                            Log.d("PING", "Error: ${response.code()}")
+                        }
+                } catch (e: Exception) {
+                    Log.d("PING", "Failed: ${e.message}")
+                }
+                }
                 showBottomSheet = true
             },
             modifier = Modifier.padding(horizontal = 24.dp)

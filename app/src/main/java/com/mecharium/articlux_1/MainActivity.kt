@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.mecharium.articlux_1.ui.screens.HomeScreen
+import com.mecharium.articlux_1.ui.screens.home.HomeScreen
 import com.mecharium.articlux_1.ui.theme.Articlux_1Theme
 
 

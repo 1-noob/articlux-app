@@ -2,6 +2,8 @@ package com.mecharium.articlux_1.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
@@ -12,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mecharium.articlux_1.data.model.Article
 
 
@@ -22,54 +25,65 @@ fun ArticleCard(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {}
 ) {
+
+    val backgroundColor =
+        if (article.status.trim().equals("completed", ignoreCase = true)) {
+            Color(0xFFE8F6C9)             //0xFFAED581
+        } else {
+            MaterialTheme.colorScheme.surface
+    }
+
     Card(
         modifier = modifier
-            .fillMaxWidth()
+            .width(300.dp)
             .clickable { onClick() },
-        shape = MaterialTheme.shapes.medium,
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = backgroundColor
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
         ) {
+            // Top Row -> Stars
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                repeat(5){ index ->
+                    val starColor =
+                        if (index < article.rating) Color(0xFFFFC107) else Color.LightGray
+
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = "star",
+                        tint = starColor,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(2.dp))
+
             // Title
             Text(
                 text = article.title,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(2.dp))
 
             // Category
             Text(
                 text = article.category,
                 style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.primary
+                fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
+                color = Color.Gray
             )
-
-            Spacer(modifier = Modifier.height(4.dp))
-
-            // Rating Stars
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                repeat(article.rating) {
-                    Icon(
-                        imageVector = Icons.Default.Star,
-                        contentDescription = "star",
-                        tint = Color(0xFFFFC107),
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-                if (article.rating == 0){
-                    Text(
-                        text = "No String",
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
         }
     }
 }
@@ -82,7 +96,7 @@ fun ArticleCardPreview() {
         ArticleCard(
             article = Article(
                 title = "Sample News Article Title",
-                status = "Pending",
+                status = "completed",
                 rating = 3,
                 category = "Test"
             )

@@ -10,11 +10,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import com.mecharium.articlux_1.ui.components.PrimaryButton
 import kotlinx.coroutines.launch
 import com.mecharium.articlux_1.data.remote.RetrofitInstance
-import okhttp3.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(){
+fun ScanScreen(){
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()

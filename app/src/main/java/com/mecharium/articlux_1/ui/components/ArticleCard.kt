@@ -1,5 +1,6 @@
 package com.mecharium.articlux_1.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
@@ -8,7 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -16,9 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mecharium.articlux_1.data.model.Article
+import com.mecharium.articlux_1.ui.theme.UiDimensions
+import com.mecharium.articlux_1.ui.theme.rememberUiDimensions
 
 
-
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun ArticleCard(
     article: Article,
@@ -33,9 +36,12 @@ fun ArticleCard(
             MaterialTheme.colorScheme.surface
     }
 
+    val ui = rememberUiDimensions()
+
     Card(
         modifier = modifier
-            .width(300.dp)
+            .width(ui.cardWidth)
+            .height(ui.cardHeight)
             .clickable { onClick() },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
@@ -65,17 +71,19 @@ fun ArticleCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(ui.mediumSpacing))
 
             // Title
             Text(
                 text = article.title,
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp
+                fontSize = 14.sp,
+                lineHeight = 16.sp,
+                maxLines = 3
             )
 
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(ui.smallSpacing))
 
             // Category
             Text(

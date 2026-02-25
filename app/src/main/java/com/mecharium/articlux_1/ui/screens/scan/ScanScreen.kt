@@ -1,4 +1,4 @@
-package com.mecharium.articlux_1.ui.screens
+package com.mecharium.articlux_1.ui.screens.scan
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

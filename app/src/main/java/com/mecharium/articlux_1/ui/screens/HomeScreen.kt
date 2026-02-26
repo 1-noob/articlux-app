@@ -101,54 +101,86 @@ fun HomeScreen() {
                 .padding(paddingValues),
             contentAlignment = Alignment.Center
         ) {
-            if (homeMode is HomeMode.Idle) {
-                PrimaryButton(
-                    text = "SCAN",
-                    onClick = {
+            when (val mode = homeMode) {
+                is HomeMode.Idle -> {
+                    PrimaryButton(
+                        text = "SCAN",
+                        onClick = {
 
-                        showBottomSheet = true
+                            showBottomSheet = true
 
-                        // Test API Connection
-                        scope.launch {
-                            try {
-                                isLoading = true
+                            // Test API Connection
+                            scope.launch {
+                                try {
+                                    isLoading = true
 
-                                val response = RetrofitInstance.api.scan()
+                                    val response = RetrofitInstance.api.scan()
 
-                                if (response.isSuccessful) {
+                                    if (response.isSuccessful) {
 
-                                    val body = response.body()
+                                        val body = response.body()
 
-                                    body?.let {
+                                        body?.let {
 
-                                        val classified = it.stats.classified
-                                        val review = it.stats.needs_review
-                                        val newArticles = it.stats.new_articles
+                                            val classified = it.stats.classified
+                                            val review = it.stats.needs_review
+                                            val newArticles = it.stats.new_articles
 
-                                        scanMessage =
-                                            "Found $newArticles articles :\n" +
-                                                    "$classified are classified and $review need your reviewing.\n"
+                                            scanMessage =
+                                                "Found $newArticles articles :\n" +
+                                                        "$classified are classified and $review need your reviewing.\n"
 
-                                        // Mark scan successful
-                                        isScanSuccessful = true
+                                            // Mark scan successful
+                                            isScanSuccessful = true
 
+                                        }
+                                    } else {
+                                        scanMessage = "Error: ${response.code()}"
+                                        showBottomSheet = true
+                                        isScanSuccessful = false
                                     }
-                                } else {
-                                    scanMessage = "Error: ${response.code()}"
+                                } catch (e: Exception) {
+                                    scanMessage = "Failed: ${e.message}"
                                     showBottomSheet = true
                                     isScanSuccessful = false
+                                } finally {
+                                    isLoading = false
                                 }
-                            } catch (e: Exception) {
-                                scanMessage = "Failed: ${e.message}"
-                                showBottomSheet = true
-                                isScanSuccessful = false
-                            } finally {
-                                isLoading = false
+                            }
+                        },
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
+                }
+
+                is HomeMode.Review -> {
+                    when (val reviewState = mode.reviewState){
+
+                        is ReviewState.ShowingArticle -> {
+                            Card(
+                                modifier = Modifier
+                                    .padding(24.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(24.dp)
+                                ) {
+                                    Text(
+                                        text = reviewState.article.title,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+
+                                    Spacer(Modifier.height(16.dp))
+
+                                    Text("Review Mode active")
+                                }
                             }
                         }
-                    },
-                    modifier = Modifier.padding(horizontal = 24.dp)
-                )
+                        else -> {
+                            // Temporary placeholder untill we implement other states
+                            Text("Processing...")
+                        }
+                    }
+                }
             }
         }
 

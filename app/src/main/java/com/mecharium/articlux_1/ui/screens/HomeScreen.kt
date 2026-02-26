@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import com.mecharium.articlux_1.ui.components.PrimaryButton
 import kotlinx.coroutines.launch
 import com.mecharium.articlux_1.data.remote.RetrofitInstance
@@ -18,7 +19,7 @@ import okhttp3.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(){
+fun HomeScreen() {
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -35,204 +36,206 @@ fun HomeScreen(){
         snackbarHostState: SnackbarHostState,
         onModeChange: (HomeMode) -> Unit
     ) {
-       try {
-           val response = RetrofitInstance.api.review(
-               action = "get_next",
-               url = null,
-               category = null
-           )
+        try {
+            val response = RetrofitInstance.api.review(
+                action = "get_next",
+                url = null,
+                category = null
+            )
 
-           if (response.isSuccessful) {
-               val body = response.body()
+            if (response.isSuccessful) {
+                val body = response.body()
 
-               if (body != null) {
-                   when (body.state) {
-                       "ready" -> {
-                           val articleData = body.data
+                if (body != null) {
+                    when (body.state) {
+                        "ready" -> {
+                            val articleData = body.data
 
-                           if (articleData != null) {
-                               val article = ReviewArticle(
-                                   url = articleData.url,
-                                   title = articleData.title
-                               )
+                            if (articleData != null) {
+                                val article = ReviewArticle(
+                                    url = articleData.url,
+                                    title = articleData.title
+                                )
 
-                               onModeChange(
-                                   HomeMode.Review(
-                                       ReviewState.ShowingArticle(article)
-                                   )
-                               )
-                           }
-                       }
+                                onModeChange(
+                                    HomeMode.Review(
+                                        ReviewState.ShowingArticle(article)
+                                    )
+                                )
+                            }
+                        }
 
-                       "empty" -> {
-                           snackbarHostState.showSnackbar(
-                               message = "Review Process Complete!"
-                           )
-                           onModeChange(HomeMode.Idle)
-                       }
+                        "empty" -> {
+                            snackbarHostState.showSnackbar(
+                                message = "Review Process Complete!"
+                            )
+                            onModeChange(HomeMode.Idle)
+                        }
 
-                       "else" -> {
-                           snackbarHostState.showSnackbar(
-                               message = "Unexpected State"
-                           )
-                           onModeChange(HomeMode.Idle)
-                       }
-                   }
-               }
-           } else {
-               snackbarHostState.showSnackbar(
-                   message = "Error :${response.code()}"
-               )
-           }
-       } catch (e: Exception) {
-           snackbarHostState.showSnackbar(
-               message = "Failed: ${e.message}"
-           )
-       }
+                        else -> {
+                            snackbarHostState.showSnackbar(
+                                message = "Unexpected State"
+                            )
+                            onModeChange(HomeMode.Idle)
+                        }
+                    }
+                }
+            } else {
+                snackbarHostState.showSnackbar(
+                    message = "Error :${response.code()}"
+                )
+            }
+        } catch (e: Exception) {
+            snackbarHostState.showSnackbar(
+                message = "Failed: ${e.message}"
+            )
+        }
     }
 
     Scaffold(
-        snackbarHost = {SnackbarHost(hostState = snackbarHostState)}
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
-        if (homeMode is HomeMode.Idle){
-            PrimaryButton(
-                text = "SCAN",
-                onClick = {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
+            contentAlignment = Alignment.Center
+        ) {
+            if (homeMode is HomeMode.Idle) {
+                PrimaryButton(
+                    text = "SCAN",
+                    onClick = {
 
-                    showBottomSheet = true
+                        showBottomSheet = true
 
-                    // Test API Connection
-                    scope.launch {
-                        try {
-                            isLoading = true
+                        // Test API Connection
+                        scope.launch {
+                            try {
+                                isLoading = true
 
-                            val response = RetrofitInstance.api.scan()
+                                val response = RetrofitInstance.api.scan()
 
-                            if (response.isSuccessful) {
+                                if (response.isSuccessful) {
 
-                                val body = response.body()
+                                    val body = response.body()
 
-                                body?.let {
+                                    body?.let {
 
-                                    val classified = it.stats.classified
-                                    val review = it.stats.needs_review
-                                    val newArticles = it.stats.new_articles
+                                        val classified = it.stats.classified
+                                        val review = it.stats.needs_review
+                                        val newArticles = it.stats.new_articles
 
-                                    scanMessage =
-                                        "Found $newArticles articles :\n" +
-                                                "$classified are classified and $review need your reviewing.\n"
+                                        scanMessage =
+                                            "Found $newArticles articles :\n" +
+                                                    "$classified are classified and $review need your reviewing.\n"
 
-                                    // Mark scan successful
-                                    isScanSuccessful = true
+                                        // Mark scan successful
+                                        isScanSuccessful = true
 
+                                    }
+                                } else {
+                                    scanMessage = "Error: ${response.code()}"
+                                    showBottomSheet = true
+                                    isScanSuccessful = false
                                 }
-                            } else {
-                                scanMessage = "Error: ${response.code()}"
+                            } catch (e: Exception) {
+                                scanMessage = "Failed: ${e.message}"
                                 showBottomSheet = true
                                 isScanSuccessful = false
-                            }
-                        } catch (e: Exception) {
-                            scanMessage = "Failed: ${e.message}"
-                            showBottomSheet = true
-                            isScanSuccessful = false
-                        } finally {
-                            isLoading= false
-                        }
-                    }
-                },
-            modifier = Modifier.padding(horizontal = 24.dp)
-            )
-        }
-        Box(
-                    modifier = Modifier.fillMaxSize().padding(paddingValues),
-                    contentAlignment = Alignment.Center
-                ) {
-                }
-            }
-
-            if (showBottomSheet) {
-                ModalBottomSheet(
-                    onDismissRequest = {
-                        scope.launch {
-                            sheetState.hide()
-                        }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                showBottomSheet = false
+                            } finally {
+                                isLoading = false
                             }
                         }
                     },
-                    sheetState = sheetState
+                    modifier = Modifier.padding(horizontal = 24.dp)
+                )
+            }
+        }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    scope.launch {
+                        sheetState.hide()
+                    }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            showBottomSheet = false
+                        }
+                    }
+                },
+                sheetState = sheetState
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = if (isLoading) "Scanning..." else scanMessage
-                        )
+                    Text(
+                        text = if (isLoading) "Scanning..." else scanMessage
+                    )
 
-                        Spacer(Modifier.height(40.dp))
+                    Spacer(Modifier.height(40.dp))
 
-                        PrimaryButton(
-                            // Change to Proceed (Synchronising articles into DB)
-                            text = if (isScanSuccessful) "Proceed" else "Close",
-                            onClick = {
-                                if (isScanSuccessful) {
-                                    scope.launch {
-                                        try {
-                                            isLoading = true
+                    PrimaryButton(
+                        // Change to Proceed (Synchronising articles into DB)
+                        text = if (isScanSuccessful) "Proceed" else "Close",
+                        onClick = {
+                            if (isScanSuccessful) {
+                                scope.launch {
+                                    try {
+                                        isLoading = true
 
-                                            val response = RetrofitInstance.api.proceed()
+                                        val response = RetrofitInstance.api.proceed()
 
-                                            if (response.isSuccessful) {
-                                                val body = response.body()
-                                                body?.let {
-                                                    val inserted = it.stats.inserted
-                                                    // val skipped = it.stats.skipped
-                                                    val total = it.stats.total
+                                        if (response.isSuccessful) {
+                                            val body = response.body()
+                                            body?.let {
+                                                val inserted = it.stats.inserted
+                                                // val skipped = it.stats.skipped
+                                                val total = it.stats.total
 
-                                                    scanMessage =
-                                                        "Synchronisation Complete:\n" +
-                                                                "Inserted $inserted  articles.\n"+
-                                                                "Total articles : $total"
+                                                scanMessage =
+                                                    "Synchronisation Complete:\n" +
+                                                            "Inserted $inserted  articles.\n" +
+                                                            "Total articles : $total"
 
-                                                    // Reset state
-                                                    isScanSuccessful = false
+                                                // Reset state
+                                                isScanSuccessful = false
 
-                                                    scope.launch {
-                                                        startReview(
-                                                            scope = scope,
-                                                            snackbarHostState = snackbarHostState,
-                                                            onModeChange = { mode -> homeMode = mode }
-                                                        )
-                                                    }
-                                                }
-                                            } else {
-                                                scanMessage = "Error in Proceeding : ${response.code()}"
+
+                                                startReview(
+                                                    scope = scope,
+                                                    snackbarHostState = snackbarHostState,
+                                                    onModeChange = { mode -> homeMode = mode }
+                                                )
+
                                             }
-                                        } catch (e: Exception) {
-                                            scanMessage = "Proceed Failed: ${e.message}"
-                                        } finally {
-                                            isLoading = false
+                                        } else {
+                                            scanMessage = "Error in Proceeding : ${response.code()}"
                                         }
-                                    }
-                                } else {
-                                    // Normal close behaviour
-                                    scope.launch {
-                                        sheetState.hide()
-                                    }.invokeOnCompletion {
-                                        if (!sheetState.isVisible){
-                                            showBottomSheet = false
-                                        }
+                                    } catch (e: Exception) {
+                                        scanMessage = "Proceed Failed: ${e.message}"
+                                    } finally {
+                                        isLoading = false
                                     }
                                 }
-                            },
-                            modifier = Modifier
-                                .width(180.dp)
-                        )
-                    }
+                            } else {
+                                // Normal close behaviour
+                                scope.launch {
+                                    sheetState.hide()
+                                }.invokeOnCompletion {
+                                    if (!sheetState.isVisible) {
+                                        showBottomSheet = false
+                                    }
+                                }
+                            }
+                        },
+                        modifier = Modifier
+                            .width(180.dp)
+                    )
                 }
             }
+        }
+    }
 }

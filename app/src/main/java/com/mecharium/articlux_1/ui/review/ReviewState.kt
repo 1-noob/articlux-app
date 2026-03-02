@@ -10,7 +10,7 @@ sealed class ReviewState {
 
     data class SelectingCategory(
         val article: ReviewArticle,
-        val inputCategory: String = ""
+        val selectedCategory: String? = null
     ) : ReviewState()
 
     data class ConfirmInsert(

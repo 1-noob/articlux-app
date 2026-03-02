@@ -8,21 +8,22 @@ import kotlinx.coroutines.launch
 
 class ReviewViewModel : ViewModel() {
 
-    fun insertPrebuilt(
+    suspend fun insertPrebuilt(
         articleTitle: String,
         category: String
-    ) {
-        viewModelScope.launch {
-            try {
-                RetrofitInstance.api.review(
-                    action = "insert_prebuilt",
-                    url = articleTitle,
-                    category = category
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+    ): Boolean {
+        return try {
+            val response = RetrofitInstance.api.review(
+                action = "insert_prebuilt",
+                url = articleTitle,
+                category = category
+            )
+
+            response.isSuccessful
+        } catch (e: Exception) {
+                false
         }
+
     }
 
 }

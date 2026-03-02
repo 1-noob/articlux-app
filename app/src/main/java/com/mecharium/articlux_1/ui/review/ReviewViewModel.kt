@@ -26,4 +26,20 @@ class ReviewViewModel : ViewModel() {
 
     }
 
+    suspend fun discardArticle(
+        url: String
+    ): Boolean {
+        return try {
+            val response = RetrofitInstance.api.review(
+                action = "discard",
+                url = url,
+                category = null
+            )
+
+            response.isSuccessful
+        } catch (e: Exception) {
+            false
+        }
+    }
+
 }

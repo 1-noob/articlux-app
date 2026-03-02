@@ -258,10 +258,30 @@ fun HomeScreen() {
                                     Button(
                                         onClick = {
                                             reviewState.selectedCategory?.let { category ->
-                                                reviewModel.insertPrebuilt(
-                                                    articleTitle = reviewState.article.title,
-                                                    category = category
-                                                )
+
+                                                scope.launch {
+
+                                                    val success = reviewModel.insertPrebuilt(
+                                                            articleTitle = reviewState.article.url,
+                                                            category = category
+                                                        )
+
+                                                    if (success) {
+                                                        snackbarHostState.showSnackbar(
+                                                            "Article inserted successfully"
+                                                        )
+
+                                                        // Load Next Article
+                                                        startReview(
+                                                            snackbarHostState = snackbarHostState,
+                                                            onModeChange = { mode -> homeMode = mode}
+                                                        )
+                                                    } else {
+                                                        snackbarHostState.showSnackbar(
+                                                            "INSERT FAILED"
+                                                        )
+                                                    }
+                                                }
                                             }
                                         },
                                         enabled = reviewState.selectedCategory != null,

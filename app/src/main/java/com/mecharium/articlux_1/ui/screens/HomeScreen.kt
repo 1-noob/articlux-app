@@ -1,6 +1,7 @@
 package com.mecharium.articlux_1.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -8,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.node.ModifierNodeElement
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mecharium.articlux_1.ui.components.PrimaryButton
 import kotlinx.coroutines.launch
@@ -63,7 +65,7 @@ fun HomeScreen() {
 
                                 onModeChange(
                                     HomeMode.Review(
-                                        ReviewState.SelectingCategory(article)
+                                        ReviewState.ShowingArticle(article)
                                     )
                                 )
                             }
@@ -181,6 +183,70 @@ fun HomeScreen() {
                                         style = MaterialTheme.typography.bodyLarge
                                     )
 
+                                    Spacer(Modifier.height(20.dp))
+
+                                    // Buttons
+                                    Row(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        horizontalArrangement = Arrangement.SpaceEvenly
+                                    ) {
+
+                                        // Insert-prebuilt
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    homeMode = HomeMode.Review(
+                                                        ReviewState.SelectingCategory(
+                                                            article = reviewState.article
+                                                        )
+                                                    )
+                                                }
+                                            ) {
+                                                Text("PREBUILT")
+                                            }
+                                        }
+
+                                        // Insert special category
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    homeMode = HomeMode.Review(
+                                                        ReviewState.SelectingCategory(
+                                                            article = reviewState.article
+                                                        )
+                                                    )
+                                                }
+                                            ) {
+                                                Text("SPECIAL")
+                                            }
+                                        }
+
+                                        // Discard article
+                                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                            FloatingActionButton(
+                                                onClick = {
+                                                    scope.launch {
+                                                        val success = reviewModel.discardArticle(
+                                                            reviewState.article.url
+                                                        )
+
+                                                        if (success) {
+                                                            snackbarHostState.showSnackbar("Article Discarded!")
+
+                                                            startReview(
+                                                                snackbarHostState = snackbarHostState,
+                                                                onModeChange = { mode -> homeMode = mode}
+                                                            )
+                                                        } else {
+                                                            snackbarHostState.showSnackbar("Discard Failed!")
+                                                        }
+                                                    }
+                                                }
+                                            ) {
+                                                Text("DISCARD")
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }

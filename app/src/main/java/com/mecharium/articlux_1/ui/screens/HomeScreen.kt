@@ -8,12 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.mecharium.articlux_1.ui.components.PrimaryButton
 import kotlinx.coroutines.launch
 import com.mecharium.articlux_1.data.remote.RetrofitInstance
 import com.mecharium.articlux_1.data.model.ReviewArticle
+import com.mecharium.articlux_1.ui.review.CategoryProvider
 import com.mecharium.articlux_1.ui.review.HomeMode
 import com.mecharium.articlux_1.ui.review.ReviewState
+import com.mecharium.articlux_1.ui.review.ReviewViewModel
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.Response
 
@@ -31,8 +34,9 @@ fun HomeScreen() {
     var homeMode by remember { mutableStateOf<HomeMode>(HomeMode.Idle) }
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val reviewModel: ReviewViewModel = viewModel()
+
     suspend fun startReview(
-        scope: CoroutineScope,
         snackbarHostState: SnackbarHostState,
         onModeChange: (HomeMode) -> Unit
     ) {
@@ -59,7 +63,7 @@ fun HomeScreen() {
 
                                 onModeChange(
                                     HomeMode.Review(
-                                        ReviewState.ShowingArticle(article)
+                                        ReviewState.SelectingCategory(article)
                                     )
                                 )
                             }
@@ -165,18 +169,111 @@ fun HomeScreen() {
                                     modifier = Modifier.padding(24.dp)
                                 ) {
                                     Text(
-                                        text = reviewState.article.title,
-                                        style = MaterialTheme.typography.bodyLarge
+                                        text = "REVIEW REQUIRED",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.error
                                     )
 
                                     Spacer(Modifier.height(16.dp))
 
-                                    Text("Review Mode active")
+                                    Text(
+                                        text = reviewState.article.title,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+
+                                }
+                            }
+                        }
+
+                        is ReviewState.SelectingCategory -> {
+
+                            var expanded by remember { mutableStateOf(false) }
+
+                            Card(
+                                modifier = Modifier
+                                    .padding(24.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                Column(
+                                    modifier = Modifier
+                                        .padding(24.dp)
+                                        .fillMaxWidth()
+                                ) {
+
+                                    Text(
+                                        text = "REVIEW REQUIRED",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = MaterialTheme.colorScheme.error
+                                    )
+
+                                    Spacer(Modifier.height(16.dp))
+
+                                    Text(
+                                        text = reviewState.article.title,
+                                        style = MaterialTheme.typography.bodyLarge
+                                    )
+
+
+                                    ExposedDropdownMenuBox(
+                                        expanded = expanded,
+                                        onExpandedChange = { expanded = !expanded }
+                                    ) {
+
+                                        OutlinedTextField(
+                                            value = reviewState.selectedCategory ?: "",
+                                            onValueChange = {},
+                                            readOnly = true,
+                                            label = { Text("Select Category") },
+                                            modifier = Modifier
+                                                .menuAnchor()
+                                                .fillMaxWidth()
+                                        )
+
+                                        ExposedDropdownMenu(
+                                            expanded = expanded,
+                                            onDismissRequest = { expanded = false }
+                                        ) {
+
+                                            CategoryProvider.categories.forEach { category ->
+
+                                                DropdownMenuItem(
+                                                    text = { Text(category) },
+                                                    onClick = {
+                                                        homeMode = HomeMode.Review(
+                                                            reviewState.copy(
+                                                                selectedCategory = category
+                                                            )
+                                                        )
+                                                        expanded = false
+                                                    }
+                                                )
+
+                                            }
+
+                                        }
+                                    }
+
+                                    Spacer(Modifier.height(16.dp))
+
+                                    Button(
+                                        onClick = {
+                                            reviewState.selectedCategory?.let { category ->
+                                                reviewModel.insertPrebuilt(
+                                                    articleTitle = reviewState.article.title,
+                                                    category = category
+                                                )
+                                            }
+                                        },
+                                        enabled = reviewState.selectedCategory != null,
+                                        modifier = Modifier.fillMaxWidth()
+                                    ) {
+                                        Text("Confirm")
+                                    }
                                 }
                             }
                         }
                         else -> {
-                            // Temporary placeholder untill we implement other states
+                            // Temporary placeholder until we implement other states
                             Text("Processing...")
                         }
                     }
@@ -237,7 +334,6 @@ fun HomeScreen() {
 
 
                                                 startReview(
-                                                    scope = scope,
                                                     snackbarHostState = snackbarHostState,
                                                     onModeChange = { mode -> homeMode = mode }
                                                 )

@@ -4,5 +4,6 @@ data class Article (
     var title: String,
     val status: String,
     val rating: Int,
-    val category: String
+    val category: String,
+    val url: String
 )

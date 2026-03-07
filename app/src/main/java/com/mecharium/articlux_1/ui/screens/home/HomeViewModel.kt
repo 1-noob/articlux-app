@@ -7,7 +7,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
 
 import com.mecharium.articlux_1.data.model.Article
-import com.mecharium.articlux_1.data.remote.RetrofitInstance.api
 import android.util.Log
 import com.mecharium.articlux_1.data.ArticleRepository.ArticleRepository
 

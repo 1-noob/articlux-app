@@ -5,15 +5,15 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
-import androidx.compose.runtime.currentRecomposeScope
 
-import com.mecharium.articlux_1.data.ArticleRepository.ArticleRepository
 import com.mecharium.articlux_1.data.model.Article
+import com.mecharium.articlux_1.data.remote.RetrofitInstance.api
+import android.util.Log
+import com.mecharium.articlux_1.data.ArticleRepository.ArticleRepository
 
 class HomeViewModel : ViewModel() {
 
     private val repository = ArticleRepository()
-
     private val _articles = mutableStateOf<List<Article>>(emptyList())
     val articles: State<List<Article>> = _articles
 
@@ -23,12 +23,14 @@ class HomeViewModel : ViewModel() {
     fun loadArticles(page: Int) {
         viewModelScope.launch {
             try {
-                val data = repository.fetchArticles(page)
+                val articles = repository.fetchArticles(page)
 
-                _articles.value = data
+                Log.d("API_DEBUG", "${articles.size}")
+
                 currentPage = page
+                _articles.value = articles
             } catch (e: Exception){
-                e.printStackTrace()
+                Log.e("API_DEBUG", "Error loading articles", e)
             }
         }
     }

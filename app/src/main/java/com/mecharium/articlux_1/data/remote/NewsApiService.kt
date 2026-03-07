@@ -1,7 +1,7 @@
 package com.mecharium.articlux_1.data.remote
 
-import androidx.core.location.LocationRequestCompat
-import com.mecharium.articlux_1.data.model.ArticleResponse
+
+import com.mecharium.articlux_1.data.model.ApiResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -21,7 +21,6 @@ interface NewsApiService {
 
     @GET("api/get_articles")
     suspend fun getArticles(
-        @Query("page") page: Int,
-        @Query("limit") limit: Int = 60
-    ) : ArticleResponse
+        @Query("page") page: Int
+    ) : ApiResponse
 }

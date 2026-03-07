@@ -30,11 +30,9 @@ fun ArticleCard(
 ) {
 
     val backgroundColor =
-        if (article.status.trim().equals("completed", ignoreCase = true)) {
-            Color(0xFFE8F6C9)             //0xFFAED581
-        } else {
-            MaterialTheme.colorScheme.surface
-    }
+        if (article.status == 1) {
+            Color(0xFFE8F6C9)
+        } else MaterialTheme.colorScheme.surface
 
     val ui = rememberUiDimensions()
 
@@ -60,7 +58,7 @@ fun ArticleCard(
             ) {
                 repeat(5){ index ->
                     val starColor =
-                        if (index < article.rating) Color(0xFFFFC107) else Color.LightGray
+                        if (index < (article.rating ?:0)) Color(0xFFFFC107) else Color.LightGray
 
                     Icon(
                         imageVector = Icons.Default.Star,
@@ -75,7 +73,7 @@ fun ArticleCard(
 
             // Title
             Text(
-                text = article.title,
+                text = article.title ?:"",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 14.sp,
@@ -87,7 +85,7 @@ fun ArticleCard(
 
             // Category
             Text(
-                text = article.category,
+                text = article.category ?:"",
                 style = MaterialTheme.typography.bodySmall,
                 fontStyle = androidx.compose.ui.text.font.FontStyle.Italic,
                 color = Color.Gray
@@ -104,9 +102,10 @@ fun ArticleCardPreview() {
         ArticleCard(
             article = Article(
                 title = "Sample News Article Title",
-                status = "completed",
+                status = 1,
                 rating = 3,
-                category = "Test"
+                category = "Test",
+                url = "https://example.com"
             )
         )
     }

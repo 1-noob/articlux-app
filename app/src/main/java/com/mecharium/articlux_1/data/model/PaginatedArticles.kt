@@ -1,6 +1,6 @@
 package com.mecharium.articlux_1.data.model
 
-data class ApiResponse(
+data class PaginatedArticles(
     val status: String,
     val page: Int,
     val limit: Int,

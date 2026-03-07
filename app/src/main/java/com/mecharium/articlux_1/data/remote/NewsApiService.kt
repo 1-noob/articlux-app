@@ -1,7 +1,7 @@
 package com.mecharium.articlux_1.data.remote
 
 
-import com.mecharium.articlux_1.data.model.ApiResponse
+import com.mecharium.articlux_1.data.model.PaginatedArticles
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -22,5 +22,5 @@ interface NewsApiService {
     @GET("api/get_articles")
     suspend fun getArticles(
         @Query("page") page: Int
-    ) : ApiResponse
+    ) : PaginatedArticles
 }

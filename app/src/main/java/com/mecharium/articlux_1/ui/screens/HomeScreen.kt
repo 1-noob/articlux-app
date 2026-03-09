@@ -9,6 +9,7 @@ import androidx.compose.ui.unit.dp
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.VerticalDivider
 
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -60,6 +61,29 @@ fun HomeScreen() {
                                        )
                         .padding(4.dp)
                     // label = {Text("Home")}
+                )
+
+                // Scan - Scans for new Articles and inserts them into the database
+                NavigationRailItem(
+                    selected = selectedItem == 1,
+                    onClick = { selectedItem = 1},
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = "Search"
+                        )
+                    },
+                    colors = NavigationRailItemDefaults.colors(
+                        indicatorColor = Color.Transparent
+                    ),
+                    modifier = Modifier.clip(RoundedCornerShape(16.dp))
+                                       .background(
+                                           if (selectedItem == 0)
+                                               MaterialTheme.colorScheme.secondaryContainer
+                                           else
+                                               Color.Transparent
+                                       )
+                                       .padding(4.dp)
                 )
 
             }

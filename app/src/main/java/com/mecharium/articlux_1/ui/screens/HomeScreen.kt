@@ -70,7 +70,7 @@ fun HomeScreen() {
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "Search"
+                            contentDescription = "Scan"
                         )
                     },
                     colors = NavigationRailItemDefaults.colors(
@@ -78,12 +78,13 @@ fun HomeScreen() {
                     ),
                     modifier = Modifier.clip(RoundedCornerShape(16.dp))
                                        .background(
-                                           if (selectedItem == 0)
+                                           if (selectedItem == 1)
                                                MaterialTheme.colorScheme.secondaryContainer
                                            else
                                                Color.Transparent
                                        )
                                        .padding(4.dp)
+                    // label = {Text("Scan")}
                 )
 
             }

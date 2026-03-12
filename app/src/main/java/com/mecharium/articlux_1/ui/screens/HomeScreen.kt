@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 
 import com.mecharium.articlux_1.ui.theme.TomorrowFont
+import com.mecharium.articlux_1.ui.screens.scan.ScanBottomSheet
 import kotlin.io.encoding.Base64
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,6 +29,8 @@ fun HomeScreen() {
 
     // Variables
     var selectedItem by remember { mutableIntStateOf(0) }
+    var showScan by remember { mutableStateOf(false) }
+
 
     Scaffold(
         topBar = {
@@ -54,6 +57,7 @@ fun HomeScreen() {
             FloatingActionButton(
                 onClick = {
                     // Scan new Articles
+                    showScan = true
                 },
                 shape = RoundedCornerShape(50),
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -137,6 +141,11 @@ fun HomeScreen() {
                 Text("Main Content Area")
             }
         }
+    }
+    if (showScan){
+        ScanBottomSheet (
+            onDismiss = { showScan = false }
+        )
     }
 
 }

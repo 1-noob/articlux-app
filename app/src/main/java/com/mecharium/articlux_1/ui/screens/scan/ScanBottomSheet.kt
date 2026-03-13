@@ -22,6 +22,7 @@ fun ScanBottomSheet(
     var message by remember { mutableStateOf("Scan New Articles") }
     var loading by remember { mutableStateOf(false) }
     var scanFinished by remember { mutableStateOf(false) }
+    var insertFinished by remember { mutableStateOf(false) }
 
 
     LaunchedEffect(Unit) {
@@ -32,8 +33,14 @@ fun ScanBottomSheet(
                 if (response.isSuccessful) {
                     val body = response.body()
                     body?.let {
-                        message = "${it.stats.new_articles} new articles found.\n${it.stats.classified} are classified.\n${it.stats.needs_review} needs your review.\n"
-                        scanFinished = true
+                        if (it.stats.new_articles == 0){
+                            message = "No new articles found."
+                            scanFinished = false
+                        } else {
+                            message =
+                                "${it.stats.new_articles} new articles found.\n${it.stats.classified} are classified.\n${it.stats.needs_review} needs your review.\n"
+                            scanFinished = true
+                        }
                     }
                 } else {
                     message = "Scan failed: ${response.code()}"
@@ -65,7 +72,7 @@ fun ScanBottomSheet(
 
             Spacer(Modifier.height(24.dp))
 
-            if (scanFinished && !loading) {
+            if (scanFinished && !loading && !insertFinished) {
                 Button(
                     onClick = {
                         scope.launch {
@@ -78,6 +85,7 @@ fun ScanBottomSheet(
                                 if (response.isSuccessful) {
                                     val body = response.body()
                                     message = body?.message ?: "Insert completed."
+                                    insertFinished = true
                                 } else {
                                     message = "Insert failed: ${response.code()}"
                                 }
@@ -91,7 +99,19 @@ fun ScanBottomSheet(
                 ) {
                     Text("PROCEED!")
                 }
+
+                Spacer(Modifier.height(16.dp))
             }
+
+            if (!loading){
+                Button(
+                    onClick = {onDismiss()}
+                ) {
+                    Text("CLOSE")
+                }
+            }
+
+            Spacer(Modifier.height(16.dp))
         }
     }
 

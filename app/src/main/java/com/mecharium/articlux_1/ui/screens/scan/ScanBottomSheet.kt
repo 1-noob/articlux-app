@@ -21,6 +21,8 @@ fun ScanBottomSheet(
 
     var message by remember { mutableStateOf("Scan New Articles") }
     var loading by remember { mutableStateOf(false) }
+    var scanFinished by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(Unit) {
         scope.launch {
@@ -31,6 +33,7 @@ fun ScanBottomSheet(
                     val body = response.body()
                     body?.let {
                         message = "${it.stats.new_articles} new articles found.\n${it.stats.classified} are classified.\n${it.stats.needs_review} needs your review.\n"
+                        scanFinished = true
                     }
                 } else {
                     message = "Scan failed: ${response.code()}"
@@ -61,6 +64,34 @@ fun ScanBottomSheet(
             Text(message)
 
             Spacer(Modifier.height(24.dp))
+
+            if (scanFinished && !loading) {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            try {
+                                loading = true
+                                message = "Inserting articles..."
+
+                                val response = RetrofitInstance.api.proceed()
+
+                                if (response.isSuccessful) {
+                                    val body = response.body()
+                                    message = body?.message ?: "Insert completed."
+                                } else {
+                                    message = "Insert failed: ${response.code()}"
+                                }
+                            } catch (e: Exception) {
+                                message = "Insert error: ${e.message}"
+                            } finally {
+                                loading = false
+                            }
+                        }
+                    }
+                ) {
+                    Text("PROCEED!")
+                }
+            }
         }
     }
 

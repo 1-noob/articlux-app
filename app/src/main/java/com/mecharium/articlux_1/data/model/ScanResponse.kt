@@ -1,6 +1,4 @@
-package com.mecharium.articlux_1.data.remote
-
-import android.os.Message
+package com.mecharium.articlux_1.data.model
 
 data class ScanResponse(
     val status: String,

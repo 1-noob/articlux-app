@@ -1,4 +1,4 @@
-package com.mecharium.articlux_1.ui.screens
+package com.mecharium.articlux_1.ui.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 
 import com.mecharium.articlux_1.ui.theme.TomorrowFont
 import com.mecharium.articlux_1.ui.screens.scan.ScanBottomSheet
-import kotlin.io.encoding.Base64
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

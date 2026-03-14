@@ -137,7 +137,7 @@ fun HomeScreen() {
             Box(
                 modifier = Modifier.fillMaxSize().padding(24.dp)
             ) {
-                Text("Main Content Area")
+                ArticleDashboard()
             }
         }
     }

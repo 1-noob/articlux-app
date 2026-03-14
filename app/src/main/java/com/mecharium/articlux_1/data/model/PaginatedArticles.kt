@@ -1,3 +1,5 @@
+package com.mecharium.articlux_1.data.model
+
 import com.mecharium.articlux_1.data.model.Article
 
 data class PaginatedArticles(

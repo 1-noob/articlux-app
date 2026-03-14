@@ -7,6 +7,7 @@ import retrofit2.http.Query
 
 import com.mecharium.articlux_1.data.model.ProceedResponse
 import com.mecharium.articlux_1.data.model.PaginatedArticles
+import com.mecharium.articlux_1.data.model.ScanResponse
 
 
 interface NewsApiService {

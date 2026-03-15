@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -25,10 +26,16 @@ fun ArticleDashboard(
     val configuration = LocalConfiguration.current
     val screenWidthDp = configuration.screenWidthDp
 
+    val gridState = rememberLazyGridState()
+
     val columns = if (screenWidthDp < 600) 1 else 4
 
     LaunchedEffect(Unit) {
         viewModel.load_Articles(1)
+    }
+
+    LaunchedEffect(currentPage) {
+        gridState.scrollToItem(0)
     }
 
     Column(
@@ -59,6 +66,7 @@ fun ArticleDashboard(
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(columns),
+            state = gridState,
             modifier = Modifier.weight(1f)
         ) {
             items(articles) { article ->

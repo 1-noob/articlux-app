@@ -44,24 +44,6 @@ fun ArticleDashboard(
             .padding(16.dp)
     ) {
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(
-                onClick = { viewModel.previousPage() },
-                enabled = currentPage > 1
-            ) {
-                Text("Previous")
-            }
-
-            Button(
-                onClick = { viewModel.nextPage() }
-            ) {
-                Text("Next")
-            }
-        }
-
         Spacer(modifier = Modifier.height(12.dp))
 
         LazyVerticalGrid(
@@ -77,5 +59,6 @@ fun ArticleDashboard(
                 )
             }
         }
+
     }
 }

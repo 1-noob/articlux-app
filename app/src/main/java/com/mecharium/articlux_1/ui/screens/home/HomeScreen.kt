@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.automirrored.filled.NavigateBefore
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.VerticalDivider
 
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import com.mecharium.articlux_1.ui.theme.TomorrowFont
 import com.mecharium.articlux_1.ui.screens.scan.ScanBottomSheet
@@ -25,6 +28,9 @@ import com.mecharium.articlux_1.ui.screens.scan.ScanBottomSheet
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
+
+    val homeViewModel: HomeViewModel = viewModel()
+    val currentPage by homeViewModel.currentPage
 
     // Variables
     var selectedItem by remember { mutableIntStateOf(0) }
@@ -126,6 +132,35 @@ fun HomeScreen() {
                     // label = {Text("Scan")}
                 )
 
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Navigation buttons for HomeScreen
+                if (selectedItem == 0) {
+                    Column {
+
+                        IconButton(
+                            onClick = { homeViewModel.previousPage() },
+                            enabled = currentPage > 1
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
+                                contentDescription = "Previous Page"
+                            )
+                        }
+
+                        IconButton(
+                            onClick = { homeViewModel.nextPage() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.NavigateNext,
+                                contentDescription = "Next Page"
+                            )
+                        }
+
+                    }
+                }
+
+
             }
 
             // Divider
@@ -137,7 +172,7 @@ fun HomeScreen() {
             Box(
                 modifier = Modifier.fillMaxSize().padding(24.dp)
             ) {
-                ArticleDashboard()
+                ArticleDashboard(viewModel = homeViewModel)
             }
         }
     }

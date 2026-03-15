@@ -79,7 +79,10 @@ fun HomeScreen() {
     ) { paddingValues ->
 
         Row(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(8.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
         ) {
             NavigationRail(
                 modifier = Modifier.padding(horizontal = 10.dp).width(60.dp)
@@ -170,7 +173,7 @@ fun HomeScreen() {
 
             // Main Content Area
             Box(
-                modifier = Modifier.fillMaxSize().padding(24.dp)
+                modifier = Modifier.fillMaxSize()
             ) {
                 ArticleDashboard(viewModel = homeViewModel)
             }

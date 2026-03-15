@@ -41,7 +41,7 @@ fun ArticleDashboard(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
 
         Spacer(modifier = Modifier.height(12.dp))

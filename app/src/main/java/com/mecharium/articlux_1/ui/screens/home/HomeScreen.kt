@@ -1,4 +1,4 @@
-package com.mecharium.articlux_1.ui.screens
+package com.mecharium.articlux_1.ui.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -11,6 +11,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.automirrored.filled.NavigateBefore
+import androidx.compose.material.icons.automirrored.filled.NavigateNext
 import androidx.compose.material3.VerticalDivider
 
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,14 +20,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 import com.mecharium.articlux_1.ui.theme.TomorrowFont
 import com.mecharium.articlux_1.ui.screens.scan.ScanBottomSheet
-import kotlin.io.encoding.Base64
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen() {
+
+    val homeViewModel: HomeViewModel = viewModel()
+    val currentPage by homeViewModel.currentPage
 
     // Variables
     var selectedItem by remember { mutableIntStateOf(0) }
@@ -74,7 +79,10 @@ fun HomeScreen() {
     ) { paddingValues ->
 
         Row(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(8.dp)
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(start = 8.dp, end = 8.dp, bottom = 8.dp)
         ) {
             NavigationRail(
                 modifier = Modifier.padding(horizontal = 10.dp).width(60.dp)
@@ -127,6 +135,35 @@ fun HomeScreen() {
                     // label = {Text("Scan")}
                 )
 
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Navigation buttons for HomeScreen
+                if (selectedItem == 0) {
+                    Column {
+
+                        IconButton(
+                            onClick = { homeViewModel.previousPage() },
+                            enabled = currentPage > 1
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.NavigateBefore,
+                                contentDescription = "Previous Page"
+                            )
+                        }
+
+                        IconButton(
+                            onClick = { homeViewModel.nextPage() }
+                        ) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.NavigateNext,
+                                contentDescription = "Next Page"
+                            )
+                        }
+
+                    }
+                }
+
+
             }
 
             // Divider
@@ -136,9 +173,9 @@ fun HomeScreen() {
 
             // Main Content Area
             Box(
-                modifier = Modifier.fillMaxSize().padding(24.dp)
+                modifier = Modifier.fillMaxSize()
             ) {
-                Text("Main Content Area")
+                ArticleDashboard(viewModel = homeViewModel)
             }
         }
     }

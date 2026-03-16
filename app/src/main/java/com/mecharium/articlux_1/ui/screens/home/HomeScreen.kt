@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mecharium.articlux_1.ui.screens.review.ReviewBottomSheet
 
 import com.mecharium.articlux_1.ui.theme.TomorrowFont
 import com.mecharium.articlux_1.ui.screens.scan.ScanBottomSheet
@@ -35,6 +36,7 @@ fun HomeScreen() {
     // Variables
     var selectedItem by remember { mutableIntStateOf(0) }
     var showScan by remember { mutableStateOf(false) }
+    var showReview by remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -179,9 +181,20 @@ fun HomeScreen() {
             }
         }
     }
+
     if (showScan){
         ScanBottomSheet (
-            onDismiss = { showScan = false }
+            onDismiss = { showScan = false },
+            onStartReview = {
+                showScan = false
+                showReview = true
+            }
+        )
+    }
+
+    if (showReview) {
+        ReviewBottomSheet (
+            onDismiss = { showReview = false }
         )
     }
 

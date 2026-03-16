@@ -22,7 +22,8 @@ enum class ScanStage {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScanBottomSheet(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    onStartReview: () -> Unit
 ) {
 
     val scope = rememberCoroutineScope()
@@ -130,7 +131,9 @@ fun ScanBottomSheet(
             if (stage == ScanStage.REVIEW_READY && !loading) {
                 Button(
                     onClick = {
-                        message = "Starting review process..."
+                        // Starting review process
+                        onDismiss()
+                        onStartReview()
                     }
                 ) {
                     Text("PROCEED!")

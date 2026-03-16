@@ -72,6 +72,8 @@ fun ScanBottomSheet(
 
             Spacer(Modifier.height(24.dp))
 
+
+            // PROCEED button - inserts articles into database
             if (scanFinished && !loading && !insertFinished) {
                 Button(
                     onClick = {
@@ -103,7 +105,20 @@ fun ScanBottomSheet(
                 Spacer(Modifier.height(16.dp))
             }
 
-            if (!loading){
+            // PROCEED btn - proceed to review the articles
+            if (insertFinished && !loading) {
+                Button(
+                    onClick = {
+                        message = "Starting review process..."
+                    }
+                ) {
+                    Text("PROCEED!")
+                }
+
+                Spacer(Modifier.height(16.dp))
+            }
+
+            if (!loading && !scanFinished){
                 Button(
                     onClick = {onDismiss()}
                 ) {

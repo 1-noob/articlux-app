@@ -8,6 +8,7 @@ import retrofit2.http.Query
 import com.mecharium.articlux_1.data.model.ProceedResponse
 import com.mecharium.articlux_1.data.model.PaginatedArticles
 import com.mecharium.articlux_1.data.model.ScanResponse
+import com.mecharium.articlux_1.data.model.ReviewResponse
 
 
 interface NewsApiService {
@@ -27,5 +28,5 @@ interface NewsApiService {
         @Query("action") action: String,
         @Query("url") url: String? = null,
         @Query("category") category: String? =null
-    ) : ReviewResponse
+    ) : Response<ReviewResponse>
 }

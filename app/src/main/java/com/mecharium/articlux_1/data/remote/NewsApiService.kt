@@ -21,4 +21,11 @@ interface NewsApiService {
     suspend fun getArticles(
         @Query("page") page: Int
     ): PaginatedArticles
+
+    @POST("api/review")
+    suspend fun review(
+        @Query("action") action: String,
+        @Query("url") url: String? = null,
+        @Query("category") category: String? =null
+    ) : ReviewResponse
 }

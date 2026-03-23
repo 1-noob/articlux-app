@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 import com.mecharium.articlux_1.data.model.Article
 
@@ -18,7 +19,11 @@ fun ArticleDetailsDialog(
 ) {
 
     Dialog(
-        onDismissRequest = onDismiss
+        onDismissRequest = {},
+        properties = DialogProperties(
+            dismissOnClickOutside = false,
+            dismissOnBackPress = false
+        )
     ) {
 
         Surface(

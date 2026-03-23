@@ -12,8 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+import com.mecharium.articlux_1.data.model.Article
 import com.mecharium.articlux_1.ui.components.ArticleCard
+import com.mecharium.articlux_1.ui.components.ArticleDetailsDialog
 
 @Composable
 fun ArticleDashboard(
@@ -29,6 +30,8 @@ fun ArticleDashboard(
     val gridState = rememberLazyGridState()
 
     val columns = if (screenWidthDp < 600) 1 else 4
+
+    var selectedArticle by remember { mutableStateOf<Article?>(null) }
 
     LaunchedEffect(Unit) {
         viewModel.load_Articles(1)
@@ -55,9 +58,20 @@ fun ArticleDashboard(
                 ArticleCard(
                     article = article,
                     modifier = Modifier.padding(8.dp),
-                    onClick = {}
+                    onClick = {
+                        selectedArticle = article
+                    }
                 )
             }
+        }
+
+
+        selectedArticle?.let { art ->
+            ArticleDetailsDialog(
+                article = art,
+                onDismiss = {selectedArticle = null},
+
+            )
         }
 
     }

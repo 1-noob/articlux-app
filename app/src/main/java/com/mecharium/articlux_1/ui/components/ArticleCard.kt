@@ -2,6 +2,7 @@ package com.mecharium.articlux_1.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -31,6 +32,17 @@ fun ArticleCard(
                 .padding(16.dp)
         ) {
 
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.End
+            ) {
+                StarRating(
+                    article.rating ?: 0,
+                    spacing = 1.dp
+                )
+            }
+            Spacer(modifier = Modifier.height(3.dp))
+
             Text(
                 text = article.title ?: "Untitled",
                 fontWeight = FontWeight.Bold
@@ -42,11 +54,6 @@ fun ArticleCard(
                 text = article.category ?: "Unknown category"
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Text(
-                text = "Rating: ${article.rating ?: 0}"
-            )
         }
     }
 }

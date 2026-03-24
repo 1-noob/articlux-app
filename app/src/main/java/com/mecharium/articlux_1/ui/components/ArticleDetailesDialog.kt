@@ -11,7 +11,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 
 import com.mecharium.articlux_1.data.model.Article
-
+import com.mecharium.articlux_1.ui.components.StarRating
 @Composable
 fun ArticleDetailsDialog(
     article: Article,
@@ -58,7 +58,7 @@ fun ArticleDetailsDialog(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                Text("Rating: ${article.rating}")
+                StarRating(article.rating ?: 0)
 
                 Spacer(modifier = Modifier.height(8.dp))
 

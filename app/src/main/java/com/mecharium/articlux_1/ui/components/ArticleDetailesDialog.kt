@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FileCopy
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +23,7 @@ import com.mecharium.articlux_1.data.model.Article
 import com.mecharium.articlux_1.ui.components.StarRating
 import com.mecharium.articlux_1.ui.utils.openUrlInBrowser
 import com.mecharium.articlux_1.ui.utils.copyToClipboard
-
+import com.mecharium.articlux_1.ui.utils.copyPromptToClipboard
 
 @Composable
 fun ArticleDetailsDialog(
@@ -89,13 +90,25 @@ fun ArticleDetailsDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ){
 
+                    FloatingActionButton(
+                        onClick = {
+                            copyPromptToClipboard(context)
+                        },
+                        modifier = Modifier.size(48.dp).padding(end = 12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.FileCopy,
+                            contentDescription = "Copy Prompt"
+                        )
+                    }
+
                     FloatingActionButton (
                         onClick = {
 
                             val articleUrl = article.url ?: ""
 
                             copyToClipboard(context, articleUrl)
-                            
+
                             openUrlInBrowser(
                                 context,
                                 "https://notebooklm.google.com/"

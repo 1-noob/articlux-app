@@ -1,10 +1,13 @@
 package com.mecharium.articlux_1.ui.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.FileCopy
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -63,6 +66,30 @@ fun ArticleDetailsDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text("Category: ${article.category}")
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    Text(
+                        text = "Open NotebookLM",
+                        style = MaterialTheme.typography.labelSmall,
+                        modifier = Modifier.padding(end = 5.dp)
+                    )
+
+                    FloatingActionButton (
+                        onClick = {},
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.FileCopy,
+                            contentDescription = "Open NotebookLM"
+                        )
+                    }
+                }
             }
         }
     }

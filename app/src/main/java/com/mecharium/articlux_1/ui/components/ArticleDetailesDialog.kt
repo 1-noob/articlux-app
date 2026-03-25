@@ -21,6 +21,8 @@ import com.mecharium.articlux_1.R
 import com.mecharium.articlux_1.data.model.Article
 import com.mecharium.articlux_1.ui.components.StarRating
 import com.mecharium.articlux_1.ui.utils.openUrlInBrowser
+import com.mecharium.articlux_1.ui.utils.copyToClipboard
+
 
 @Composable
 fun ArticleDetailsDialog(
@@ -89,6 +91,11 @@ fun ArticleDetailsDialog(
 
                     FloatingActionButton (
                         onClick = {
+
+                            val articleUrl = article.url ?: ""
+
+                            copyToClipboard(context, articleUrl)
+                            
                             openUrlInBrowser(
                                 context,
                                 "https://notebooklm.google.com/"

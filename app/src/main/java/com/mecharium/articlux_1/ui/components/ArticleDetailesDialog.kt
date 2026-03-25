@@ -9,7 +9,10 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -17,11 +20,15 @@ import com.mecharium.articlux_1.R
 
 import com.mecharium.articlux_1.data.model.Article
 import com.mecharium.articlux_1.ui.components.StarRating
+import com.mecharium.articlux_1.ui.utils.openUrlInBrowser
+
 @Composable
 fun ArticleDetailsDialog(
     article: Article,
     onDismiss: () -> Unit
 ) {
+
+    val context = LocalContext.current
 
     Dialog(
         onDismissRequest = {},
@@ -44,8 +51,12 @@ fun ArticleDetailsDialog(
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
+
+                    StarRating(article.rating ?: 0)
+
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Filled.Close,
@@ -58,16 +69,15 @@ fun ArticleDetailsDialog(
 
                 Text(
                     text = article.title ?: "Untitled",
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                StarRating(article.rating ?: 0)
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text("Category: ${article.category}")
+                Text(
+                    text = "${article.category}",
+                    fontStyle = FontStyle.Italic)
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -78,7 +88,12 @@ fun ArticleDetailsDialog(
                 ){
 
                     FloatingActionButton (
-                        onClick = {},
+                        onClick = {
+                            openUrlInBrowser(
+                                context,
+                                "https://notebooklm.google.com/"
+                            )
+                        },
                         modifier = Modifier.size(48.dp)
                     ) {
                         Image(
